@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import jsPDF from "jspdf";
+import { useState } from "react";
+import ReactDOMServer from "react-dom/server";
+import Teste from './Teste'
 
-function App() {
+export default function App() {
+
+const [text, setText] = useState('');
+
+
+  const exportPDF = () => {
+
+    let element = (
+      <Teste text={text} />
+    );
+
+    const doc = new jsPDF("p", "pt", "letter");
+
+    doc.html(ReactDOMServer.renderToString(element), {
+      callback: function (doc) {
+        // doc.save('download.pdf')
+        // doc.output // conteudo
+        const pdf = doc.output('datauri')
+        console.log(pdf);
+      }
+    });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={() => setText('teste')}>Add Text</button>
+      <h1>Hello CodeSandbox</h1>
+      <h2>Start editing to see some magic happen!</h2>
+      <button onClick={exportPDF}>export</button>
     </div>
   );
 }
-
-export default App;
